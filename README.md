@@ -86,5 +86,5 @@ Supports:
 
 ---
 
-## 🧱 System Architecture
+
 
