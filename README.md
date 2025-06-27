@@ -210,4 +210,15 @@ This project is great for learning:
 - Microservices
 - Role-based access control
 - Real-world system design in Spring Boot
+- 
+erDiagram
+    USER ||--o{ TICKET : creates
+    USER ||--o{ COMMENT : writes
+    DEPARTMENT ||--o{ USER : contains
+    TICKET ||--o{ COMMENT : has
+    TICKET }o--|| USER : assigned_to
+    TICKET }o--|| USER : created_by
+    TICKET }o--|| DEPARTMENT : from_department
+    TICKET }o--|| DEPARTMENT : to_department
+
 
