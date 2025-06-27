@@ -86,5 +86,115 @@ Supports:
 
 ---
 
+## 🧱 System Architecture
 
+
+Frontend (React / Thymeleaf)
+|
+\[API Gateway - Spring Cloud]
+|
+┌────────┬────────┬────────────┐
+\| Auth   | Admin  | TicketRouter
+└────┬───┴────┬───┴────────────┘
+↓        ↓
+Department Services (IT, HR, Finance)
+
+
+- **AuthService:** Login, JWT, registration
+- **AdminService:** Stores all tickets globally
+- **TicketRouterService:** Forwards ticket to appropriate department
+- **DepartmentServices:** Handle tickets for respective departments
+
+---
+
+## 🧩 Database Schema
+
+### `users`
+
+| Column      | Type    |
+|-------------|---------|
+| id          | BIGINT  |
+| name        | VARCHAR |
+| email       | VARCHAR |
+| password    | VARCHAR |
+| role        | ENUM    |
+| department  | ENUM    |
+| enabled     | BOOLEAN |
+
+---
+
+### `tickets`
+
+| Column         | Type    |
+|----------------|---------|
+| id             | BIGINT  |
+| title          | VARCHAR |
+| description    | TEXT    |
+| created_by_id  | FK → users(id) |
+| from_dept      | ENUM    |
+| to_dept        | ENUM    |
+| assigned_to_id | FK → users(id) |
+| status         | ENUM    |
+| shared         | BOOLEAN |
+| created_at     | TIMESTAMP |
+| updated_at     | TIMESTAMP |
+
+---
+
+### `comments`
+_______________________
+| Column     | Type   |
+|------------|--------|
+| id         | BIGINT |
+| ticket_id  | FK → tickets(id) |
+| user_id    | FK → users(id) |
+| message    | TEXT   |
+| internal   | BOOLEAN |
+| created_at | TIMESTAMP |
+
+---
+
+## 🔗 Entity Relationships
+
+users
+└─< tickets (created\_by)
+└─< comments (ticket\_id, user\_id)
+
+users
+└─< tickets (assigned\_to)
+
+
+
+--------------------------------------------------------------------------------
+
+## ⚙️ Tech Stack
+_____________________________________
+| Layer       | Technology           |
+|-------------|----------------------|
+| Backend     | Spring Boot (REST)   |
+| Frontend    | React / Thymeleaf    |
+| Security    | Spring Security + JWT |
+| API Gateway | Spring Cloud Gateway |
+| DB          | MySQL / PostgreSQL   |
+| Discovery   | Eureka (optional)    |
+| Messaging   | Kafka / RabbitMQ (optional) |
+
+---
+
+## ✅ Next Steps
+
+- [ ] Define all `@Entity` classes in Spring Boot
+- [ ] Implement `User`, `Ticket`, and `Comment` services
+- [ ] Build frontend forms and dashboards
+- [ ] Deploy using Docker or local Postgres
+- [ ] Add enhancements like file uploads, email notifications, or analytics
+
+---
+
+## 💬 Want to Contribute?
+
+This project is great for learning:
+- Microservices
+- Role-based access control
+- Real-world system design in Spring Boot
 
