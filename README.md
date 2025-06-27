@@ -108,49 +108,62 @@ Department Services (IT, HR, Finance)
 ---
 
 ## 🧩 Database Schema
+---
 
-### `users`
+### 📍 `departments`
 
-| Column      | Type    |
-|-------------|---------|
-| id          | BIGINT  |
-| name        | VARCHAR |
-| email       | VARCHAR |
-| password    | VARCHAR |
-| role        | ENUM    |
-| department  | ENUM    |
-| enabled     | BOOLEAN |
+| Column   | Type     | Description                      |
+|----------|----------|----------------------------------|
+| id       | INT (PK) | Primary Key                      |
+| name     | VARCHAR  | Department name (e.g., HR, IT)   |
+| active   | BOOLEAN  | Used to soft-delete departments  |
+| created_at | TIMESTAMP | Optional audit info          |
+| updated_at | TIMESTAMP | Optional audit info          |
 
 ---
 
-### `tickets`
+### 📍 `users`
 
-| Column         | Type    |
-|----------------|---------|
-| id             | BIGINT  |
-| title          | VARCHAR |
-| description    | TEXT    |
-| created_by_id  | FK → users(id) |
-| from_dept      | ENUM    |
-| to_dept        | ENUM    |
-| assigned_to_id | FK → users(id) |
-| status         | ENUM    |
-| shared         | BOOLEAN |
-| created_at     | TIMESTAMP |
-| updated_at     | TIMESTAMP |
+| Column      | Type     | Description                        |
+|-------------|----------|------------------------------------|
+| id          | BIGINT   | Primary Key                        |
+| name        | VARCHAR  | Full name                          |
+| email       | VARCHAR  | Unique login identifier            |
+| password    | VARCHAR  | Hashed password                    |
+| role        | ENUM     | EMPLOYEE, AGENT, ADMIN             |
+| department_id | INT    | FK → departments(id)               |
+| enabled     | BOOLEAN  | Optional: active/inactive user     |
 
 ---
 
-### `comments`
-_______________________
-| Column     | Type   |
-|------------|--------|
-| id         | BIGINT |
-| ticket_id  | FK → tickets(id) |
-| user_id    | FK → users(id) |
-| message    | TEXT   |
-| internal   | BOOLEAN |
-| created_at | TIMESTAMP |
+### 📍 `tickets`
+
+| Column         | Type     | Description                                  |
+|----------------|----------|----------------------------------------------|
+| id             | BIGINT   | Primary Key                                  |
+| title          | VARCHAR  | Ticket subject                               |
+| description    | TEXT     | Detailed issue description                   |
+| created_by_id  | BIGINT   | FK → users(id)                               |
+| from_department_id | INT  | FK → departments(id)                         |
+| to_department_id   | INT  | FK → departments(id)                         |
+| assigned_to_id | BIGINT   | FK → users(id), nullable                     |
+| status         | ENUM     | OPEN, IN_PROGRESS, RESOLVED, CLOSED          |
+| shared         | BOOLEAN  | True if visible to full origin department    |
+| created_at     | TIMESTAMP| Timestamp of creation                        |
+| updated_at     | TIMESTAMP| Timestamp of last update                     |
+
+---
+
+### 📍 `comments`
+
+| Column     | Type     | Description                                 |
+|------------|----------|---------------------------------------------|
+| id         | BIGINT   | Primary Key                                 |
+| ticket_id  | BIGINT   | FK → tickets(id)                            |
+| user_id    | BIGINT   | FK → users(id)                              |
+| message    | TEXT     | Comment content                             |
+| internal   | BOOLEAN  | True = internal (agent/admin-only)          |
+| created_at | TIMESTAMP| Timestamp of the comment                    |
 
 ---
 
